@@ -2,69 +2,154 @@ import { Button } from "@/components/ui/button";
 import { Stats } from "@/components/Stats";
 import { FollowersList } from "@/components/FollowersList";
 import { FollowersChart } from "@/components/FollowersChart";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, UserPlus, UserMinus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 const Index = () => {
   const { toast } = useToast();
+  const [followers, setFollowers] = useState(() => {
+    const saved = localStorage.getItem('followers');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [newFollowerName, setNewFollowerName] = useState('');
+  const [newFollowerUsername, setNewFollowerUsername] = useState('');
 
-  // Mock data - replace with actual API calls
-  const mockStats = {
-    totalFollowers: 1234,
-    newFollowers: 5,
-    unfollowers: 2,
-  };
+  const addFollower = () => {
+    if (!newFollowerName || !newFollowerUsername) {
+      toast({
+        title: "Error",
+        description: "Please fill in both name and username",
+        variant: "destructive"
+      });
+      return;
+    }
 
-  const mockFollowers = [
-    { id: "1", username: "user1", name: "User One", timestamp: "2024-02-20" },
-    { id: "2", username: "user2", name: "User Two", timestamp: "2024-02-19" },
-  ];
+    const newFollower = {
+      id: Date.now().toString(),
+      name: newFollowerName,
+      username: newFollowerUsername,
+      timestamp: new Date().toISOString().split('T')[0]
+    };
 
-  const mockChartData = [
-    { date: "Feb 15", followers: 1230 },
-    { date: "Feb 16", followers: 1232 },
-    { date: "Feb 17", followers: 1235 },
-    { date: "Feb 18", followers: 1233 },
-    { date: "Feb 19", followers: 1234 },
-  ];
-
-  const handleManualSync = () => {
+    const updatedFollowers = [...followers, newFollower];
+    setFollowers(updatedFollowers);
+    localStorage.setItem('followers', JSON.stringify(updatedFollowers));
+    
     toast({
-      title: "Sync Started",
-      description: "Checking for follower changes...",
+      title: "Success",
+      description: "Follower added successfully",
     });
-    // Implement actual sync logic here
+
+    setNewFollowerName('');
+    setNewFollowerUsername('');
   };
+
+  const removeFollower = (id: string) => {
+    const updatedFollowers = followers.filter(f => f.id !== id);
+    setFollowers(updatedFollowers);
+    localStorage.setItem('followers', JSON.stringify(updatedFollowers));
+    
+    toast({
+      title: "Success",
+      description: "Follower removed successfully",
+    });
+  };
+
+  // Calculate stats
+  const stats = {
+    totalFollowers: followers.length,
+    newFollowers: followers.filter(f => {
+      const date = new Date(f.timestamp);
+      const now = new Date();
+      return now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000;
+    }).length,
+    unfollowers: 0 // This would need to be tracked separately
+  };
+
+  // Prepare chart data
+  const chartData = followers.reduce((acc, curr) => {
+    const date = curr.timestamp;
+    const existing = acc.find(item => item.date === date);
+    if (existing) {
+      existing.followers += 1;
+    } else {
+      acc.push({ date, followers: 1 });
+    }
+    return acc;
+  }, [] as { date: string; followers: number }[]).sort((a, b) => 
+    new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
   return (
     <div className="container py-8 space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Twitter Follower Tracker</h1>
-        <Button
-          onClick={handleManualSync}
-          className="bg-twitter-blue hover:bg-twitter-dark text-white"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          Sync Now
-        </Button>
+        <h1 className="text-3xl font-bold text-gray-900">Follower Tracker</h1>
+        <div className="flex gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-green-500 hover:bg-green-600">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Add Follower
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Follower</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={newFollowerName}
+                    onChange={(e) => setNewFollowerName(e.target.value)}
+                    placeholder="John Doe"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    value={newFollowerUsername}
+                    onChange={(e) => setNewFollowerUsername(e.target.value)}
+                    placeholder="johndoe"
+                  />
+                </div>
+                <Button onClick={addFollower} className="w-full">
+                  Add Follower
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
-      <Stats {...mockStats} />
+      <Stats {...stats} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <FollowersList
           title="Recent Followers"
-          followers={mockFollowers}
+          followers={followers}
           type="followers"
         />
         <FollowersList
           title="Recent Unfollowers"
-          followers={mockFollowers}
+          followers={[]}
           type="unfollowers"
         />
       </div>
 
-      <FollowersChart data={mockChartData} />
+      <FollowersChart data={chartData} />
     </div>
   );
 };
