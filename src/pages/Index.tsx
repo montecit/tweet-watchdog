@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Stats } from "@/components/Stats";
 import { FollowersList } from "@/components/FollowersList";
 import { FollowersChart } from "@/components/FollowersChart";
+import { TwitterImport } from "@/components/TwitterImport";
 import { RefreshCw, UserPlus, UserMinus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -65,6 +66,16 @@ const Index = () => {
     });
   };
 
+  const handleImport = (importedFollowers: any[]) => {
+    // Merge imported followers with existing ones, avoiding duplicates
+    const existingIds = new Set(followers.map((f: any) => f.id));
+    const newFollowers = importedFollowers.filter(f => !existingIds.has(f.id));
+    
+    const updatedFollowers = [...followers, ...newFollowers];
+    setFollowers(updatedFollowers);
+    localStorage.setItem('followers', JSON.stringify(updatedFollowers));
+  };
+
   // Calculate stats
   const stats = {
     totalFollowers: followers.length,
@@ -73,7 +84,7 @@ const Index = () => {
       const now = new Date();
       return now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000;
     }).length,
-    unfollowers: 0 // This would need to be tracked separately
+    unfollowers: 0
   };
 
   // Prepare chart data
@@ -133,6 +144,8 @@ const Index = () => {
           </Dialog>
         </div>
       </div>
+
+      <TwitterImport onImport={handleImport} />
 
       <Stats {...stats} />
 
