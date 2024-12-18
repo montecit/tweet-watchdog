@@ -23,38 +23,42 @@ export const FollowersList = ({ title, followers, type }: FollowersListProps) =>
   };
 
   return (
-    <Card className="animate-fade-in">
-      <CardHeader>
+    <Card className="animate-fade-in bg-white shadow-sm">
+      <CardHeader className="border-b">
         <CardTitle className="text-lg font-medium">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[300px] pr-4">
+      <CardContent className="p-0">
+        <ScrollArea className="h-[400px]">
           {followers && followers.length > 0 ? (
-            followers.map((follower) => (
-              <div
-                key={follower.id}
-                className="flex items-center space-x-4 rounded-lg p-2 hover:bg-gray-100 transition-colors cursor-pointer"
-                onClick={() => openTwitterProfile(follower.username)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    openTwitterProfile(follower.username);
-                  }
-                }}
-              >
-                <div className="rounded-full bg-gray-100 p-2">
-                  <User className="h-4 w-4 text-gray-500" />
+            <div className="divide-y">
+              {followers.map((follower) => (
+                <div
+                  key={follower.id}
+                  className="flex items-center space-x-4 p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => openTwitterProfile(follower.username)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      openTwitterProfile(follower.username);
+                    }
+                  }}
+                >
+                  <div className="rounded-full bg-gray-100 p-2">
+                    <User className="h-5 w-5 text-gray-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 truncate">{follower.name}</p>
+                    <p className="text-sm text-gray-500 truncate">@{follower.username}</p>
+                  </div>
+                  <div className="text-xs text-gray-400">{follower.timestamp}</div>
                 </div>
-                <div className="flex-1 text-left">
-                  <p className="font-medium">{follower.name}</p>
-                  <p className="text-sm text-gray-500">@{follower.username}</p>
-                </div>
-                <div className="text-xs text-gray-500">{follower.timestamp}</div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
-            <div className="text-center text-gray-500 py-4">No {type} found</div>
+            <div className="flex items-center justify-center h-full text-gray-500 p-4">
+              No {type} found
+            </div>
           )}
         </ScrollArea>
       </CardContent>
