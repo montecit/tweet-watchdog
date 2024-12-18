@@ -56,19 +56,8 @@ const Index = () => {
   };
 
   const handleImport = (importedFollowers: any[]) => {
-    // Transform the imported data to match our follower structure
-    const transformedFollowers = importedFollowers.map(f => ({
-      id: f.id || Date.now().toString(),
-      name: f.follower?.name || f.name || 'Unknown',
-      username: f.follower?.screen_name || f.username || 'unknown',
-      timestamp: f.follower?.created_at 
-        ? new Date(f.follower.created_at).toISOString().split('T')[0]
-        : new Date().toISOString().split('T')[0]
-    }));
-    
-    // Merge imported followers with existing ones, avoiding duplicates
     const existingIds = new Set(followers.map((f: any) => f.id));
-    const newFollowers = transformedFollowers.filter(f => !existingIds.has(f.id));
+    const newFollowers = importedFollowers.filter(f => !existingIds.has(f.id));
     
     const updatedFollowers = [...followers, ...newFollowers];
     setFollowers(updatedFollowers);
@@ -156,7 +145,9 @@ const Index = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <FollowersList
           title="Recent Followers"
-          followers={followers}
+          followers={followers.sort((a, b) => 
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          )}
           type="followers"
         />
         <FollowersList
