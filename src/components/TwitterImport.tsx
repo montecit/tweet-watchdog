@@ -8,7 +8,7 @@ interface TwitterFollower {
   follower: {
     accountId: string;
     userLink: string;
-    userName: string;  // Note: this is the correct property name from Twitter
+    userName: string;
     displayName: string;
   };
 }
@@ -47,12 +47,12 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       // Handle both array format and direct object format
       const followersArray = Array.isArray(data) ? data : [data];
       
-      const followers = followersArray.map((f: TwitterFollower) => {
-        console.log('Processing follower:', f); // Add this line for debugging
+      const followers = followersArray.map((f: any) => {
+        console.log('Raw follower data:', f);
         return {
           id: f.follower.accountId,
-          username: f.follower.userName?.toLowerCase() || '', // Use optional chaining and provide default
-          name: f.follower.displayName || f.follower.userName || '', // Fallback chain
+          username: f.follower.userLink.split('/').pop() || '', // Extract username from userLink
+          name: f.follower.displayName || f.follower.userLink.split('/').pop() || '', // Use displayName or fallback to username
           timestamp: new Date().toISOString().split('T')[0]
         };
       });
