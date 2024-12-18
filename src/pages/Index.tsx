@@ -14,6 +14,11 @@ const Index = () => {
   const stats = calculateStats(followers);
   const chartData = prepareChartData(followers);
 
+  // Sort followers by timestamp in descending order (most recent first)
+  const sortedFollowers = [...followers].sort((a, b) => 
+    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+
   return (
     <div className="container py-8 space-y-8">
       <div className="flex justify-between items-center">
@@ -34,9 +39,7 @@ const Index = () => {
       <div className="grid gap-4 md:grid-cols-2">
         <FollowersList
           title="Recent Followers"
-          followers={followers.sort((a, b) => 
-            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-          )}
+          followers={sortedFollowers}
           type="followers"
         />
         <FollowersList
