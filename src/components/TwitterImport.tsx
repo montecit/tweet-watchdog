@@ -8,7 +8,7 @@ interface TwitterFollower {
   follower: {
     accountId: string;
     userLink: string;
-    userName: string;
+    userName: string;  // Note: this is the correct property name from Twitter
     displayName: string;
   };
 }
@@ -24,7 +24,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
     setIsLoading(true);
     try {
       const text = await file.text();
-      console.log('Raw file content:', text.substring(0, 200)); // Log the start of the file
+      console.log('Raw file content:', text.substring(0, 200));
       
       // First, clean the text by removing any BOM or whitespace
       const cleanText = text.trim().replace(/^\uFEFF/, '');
@@ -38,23 +38,26 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       const jsonStartIndex = cleanText.indexOf('=') + 1;
       const jsonText = cleanText.slice(jsonStartIndex).trim();
       
-      console.log('Extracted JSON:', jsonText.substring(0, 200)); // Log the start of the JSON
+      console.log('Extracted JSON:', jsonText.substring(0, 200));
       
       // Parse the JSON data
       const data = JSON.parse(jsonText);
-      console.log('Parsed data:', data); // Log the parsed data structure
+      console.log('Parsed data:', data);
       
       // Handle both array format and direct object format
       const followersArray = Array.isArray(data) ? data : [data];
       
-      const followers = followersArray.map((f: TwitterFollower) => ({
-        id: f.follower.accountId,
-        username: f.follower.userName.toLowerCase(), // Ensure username is lowercase
-        name: f.follower.displayName || f.follower.userName, // Fallback to username if displayName is empty
-        timestamp: new Date().toISOString().split('T')[0]
-      }));
+      const followers = followersArray.map((f: TwitterFollower) => {
+        console.log('Processing follower:', f); // Add this line for debugging
+        return {
+          id: f.follower.accountId,
+          username: f.follower.userName?.toLowerCase() || '', // Use optional chaining and provide default
+          name: f.follower.displayName || f.follower.userName || '', // Fallback chain
+          timestamp: new Date().toISOString().split('T')[0]
+        };
+      });
 
-      console.log('Mapped followers:', followers); // Log the final mapped data
+      console.log('Mapped followers:', followers);
       
       onImport(followers);
       
