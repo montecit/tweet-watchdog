@@ -23,21 +23,25 @@ export const FollowersList = ({ title, followers, type }: FollowersListProps) =>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[300px] pr-4">
-          {followers.map((follower) => (
-            <div
-              key={follower.id}
-              className="flex items-center space-x-4 rounded-lg p-2 hover:bg-gray-100 transition-colors"
-            >
-              <div className="rounded-full bg-twitter-light p-2">
-                <User className="h-4 w-4 text-twitter-blue" />
+          {followers && followers.length > 0 ? (
+            followers.map((follower) => (
+              <div
+                key={follower.id}
+                className="flex items-center space-x-4 rounded-lg p-2 hover:bg-gray-100 transition-colors"
+              >
+                <div className="rounded-full bg-gray-100 p-2">
+                  <User className="h-4 w-4 text-gray-500" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">{follower.name}</p>
+                  <p className="text-sm text-gray-500">@{follower.username}</p>
+                </div>
+                <div className="text-xs text-gray-500">{follower.timestamp}</div>
               </div>
-              <div className="flex-1">
-                <p className="font-medium">{follower.name}</p>
-                <p className="text-sm text-gray-500">@{follower.username}</p>
-              </div>
-              <div className="text-xs text-gray-500">{follower.timestamp}</div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-gray-500 py-4">No {type} found</div>
+          )}
         </ScrollArea>
       </CardContent>
     </Card>
