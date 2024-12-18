@@ -16,6 +16,10 @@ interface FollowersListProps {
 }
 
 export const FollowersList = ({ title, followers, type }: FollowersListProps) => {
+  const openTwitterProfile = (username: string) => {
+    window.open(`https://twitter.com/${username}`, '_blank');
+  };
+
   return (
     <Card className="animate-fade-in">
       <CardHeader>
@@ -27,7 +31,15 @@ export const FollowersList = ({ title, followers, type }: FollowersListProps) =>
             followers.map((follower) => (
               <div
                 key={follower.id}
-                className="flex items-center space-x-4 rounded-lg p-2 hover:bg-gray-100 transition-colors"
+                className="flex items-center space-x-4 rounded-lg p-2 hover:bg-gray-100 transition-colors cursor-pointer"
+                onClick={() => openTwitterProfile(follower.username)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    openTwitterProfile(follower.username);
+                  }
+                }}
               >
                 <div className="rounded-full bg-gray-100 p-2">
                   <User className="h-4 w-4 text-gray-500" />
