@@ -16,8 +16,10 @@ interface FollowersListProps {
 }
 
 export const FollowersList = ({ title, followers, type }: FollowersListProps) => {
-  const openTwitterProfile = (username: string) => {
-    window.open(`https://twitter.com/${username}`, '_blank');
+  const openTwitterProfile = (userId: string) => {
+    // Remove any "user_" prefix if present
+    const cleanId = userId.replace('user_', '');
+    window.open(`https://twitter.com/i/user/${cleanId}`, '_blank');
   };
 
   return (
