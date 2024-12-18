@@ -29,8 +29,8 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       const cleanText = text.trim().replace(/^\uFEFF/, '');
       
       // Check if the file starts with the expected prefix (case insensitive)
-      if (!cleanText.toLowerCase().startsWith('window.ytd.followers.part0')) {
-        throw new Error('Invalid file format: File must start with "window.YTD.followers.part0"');
+      if (!cleanText.toLowerCase().startsWith('window.ytd.follower.part0')) {
+        throw new Error('Invalid file format: File must start with "window.YTD.follower.part0"');
       }
 
       // Extract the JSON part after the assignment
@@ -62,7 +62,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
         title: "Error",
         description: error instanceof Error 
           ? error.message 
-          : "Failed to parse Twitter data. Make sure you're uploading the correct followers.js file from your Twitter data export.",
+          : "Failed to parse Twitter data. Make sure you're uploading the correct follower.js file from your Twitter data export.",
         variant: "destructive"
       });
     } finally {
@@ -79,7 +79,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       <p className="text-sm text-gray-600">
         1. Go to Twitter Settings → Your Account → Download an archive of your data<br />
         2. Wait for the email with your data<br />
-        3. Extract the ZIP file and find the followers.js file in the data folder<br />
+        3. Extract the ZIP file and find the follower.js file in the data folder<br />
         4. Upload that file here
       </p>
       <div className="flex gap-2">
