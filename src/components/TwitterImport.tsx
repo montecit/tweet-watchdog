@@ -24,6 +24,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
     setIsLoading(true);
     try {
       const text = await file.text();
+      console.log('Raw file content:', text.substring(0, 200)); // Log the start of the file
       
       // First, clean the text by removing any BOM or whitespace
       const cleanText = text.trim().replace(/^\uFEFF/, '');
@@ -37,19 +38,24 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       const jsonStartIndex = cleanText.indexOf('=') + 1;
       const jsonText = cleanText.slice(jsonStartIndex).trim();
       
+      console.log('Extracted JSON:', jsonText.substring(0, 200)); // Log the start of the JSON
+      
       // Parse the JSON data
       const data = JSON.parse(jsonText);
+      console.log('Parsed data:', data); // Log the parsed data structure
       
       // Handle both array format and direct object format
       const followersArray = Array.isArray(data) ? data : [data];
       
       const followers = followersArray.map((f: TwitterFollower) => ({
         id: f.follower.accountId,
-        username: f.follower.userName,
-        name: f.follower.displayName,
+        username: f.follower.userName.toLowerCase(), // Ensure username is lowercase
+        name: f.follower.displayName || f.follower.userName, // Fallback to username if displayName is empty
         timestamp: new Date().toISOString().split('T')[0]
       }));
 
+      console.log('Mapped followers:', followers); // Log the final mapped data
+      
       onImport(followers);
       
       toast({
