@@ -24,10 +24,14 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
     setIsLoading(true);
     try {
       const text = await file.text();
-      const data = JSON.parse(text);
+      // Remove the "window.YTD.followers.part0 = " prefix from the file
+      const jsonText = text.replace(/window\.YTD\.followers\.part0\s*=\s*/, '');
+      const data = JSON.parse(jsonText);
       
-      // Twitter exports followers in a specific format
-      const followers = data.followers.map((f: TwitterFollower) => ({
+      // Handle both array format and direct object format
+      const followersArray = Array.isArray(data) ? data : [data];
+      
+      const followers = followersArray.map((f: TwitterFollower) => ({
         id: f.follower.accountId,
         username: f.follower.userName,
         name: f.follower.displayName,
@@ -44,7 +48,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       console.error('Error parsing Twitter data:', error);
       toast({
         title: "Error",
-        description: "Failed to parse Twitter data. Make sure you're uploading the followers.js file from your Twitter data export.",
+        description: "Failed to parse Twitter data. Make sure you're uploading the followers.js file from your Twitter data export. The file should start with 'window.YTD.followers.part0'",
         variant: "destructive"
       });
     } finally {
@@ -61,7 +65,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       <p className="text-sm text-gray-600">
         1. Go to Twitter Settings → Your Account → Download an archive of your data<br />
         2. Wait for the email with your data<br />
-        3. Extract the ZIP file and find the followers.js file<br />
+        3. Extract the ZIP file and find the followers.js file in the data folder<br />
         4. Upload that file here
       </p>
       <div className="flex gap-2">
