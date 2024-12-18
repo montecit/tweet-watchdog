@@ -1,69 +1,105 @@
-# Welcome to your Lovable project
+# Twitter Follower Analytics
 
-## Project info
+A comprehensive web application for tracking and analyzing your Twitter followers. Monitor follower growth, identify new followers and unfollowers, and visualize your follower trends over time.
 
-**URL**: https://lovable.dev/projects/6d332a9f-902d-4bfb-a1ed-02f08754fd51
+**Website**: [Make It Digi](https://www.makeitdigi.com)
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 📊 Real-time follower statistics dashboard
+- 👥 Track new followers and unfollowers
+- 📈 Visual analytics with interactive charts
+- 📱 Responsive design for all devices
+- 💾 Local storage for data persistence
+- 🔄 Import Twitter follower data
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6d332a9f-902d-4bfb-a1ed-02f08754fd51) and start prompting.
+- React + TypeScript
+- Vite for build tooling
+- Tailwind CSS for styling
+- shadcn/ui for UI components
+- Recharts for data visualization
+- React Query for state management
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v14 or higher)
+- npm or yarn package manager
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository:
+```bash
+git clone [your-repo-url]
+cd twitter-follower-analytics
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-**Use GitHub Codespaces**
+4. Open your browser and navigate to `http://localhost:5173`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Usage Instructions
 
-## What technologies are used for this project?
+### Adding Followers Manually
 
-This project is built with .
+1. Click the "Add Follower" button in the top right
+2. Enter the follower's name and username
+3. Click "Add" to save the follower
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Importing Twitter Data
 
-## How can I deploy this project?
+1. Export your Twitter follower data from Twitter
+2. Click the "Import from Twitter" button
+3. Select your exported Twitter data file
+4. The app will automatically process and display your follower information
 
-Simply open [Lovable](https://lovable.dev/projects/6d332a9f-902d-4bfb-a1ed-02f08754fd51) and click on Share -> Publish.
+### Viewing Analytics
 
-## I want to use a custom domain - is that possible?
+- The top cards show your total followers, new followers, and unfollowers
+- The main chart displays your follower growth over time
+- The lists show your most recent followers and unfollowers
+- Click on any follower to view their Twitter profile
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+### Data Management
+
+- Your data is stored locally in your browser
+- Use the "Clear Data" button to reset all follower information
+- Regular backups are recommended
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Topics
+
+- twitter-analytics
+- follower-tracking
+- react
+- typescript
+- data-visualization
+- web-application
+- social-media-tools
+- analytics-dashboard
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact us through our website.
