@@ -3,7 +3,7 @@ import { Stats } from "@/components/Stats";
 import { FollowersList } from "@/components/FollowersList";
 import { FollowersChart } from "@/components/FollowersChart";
 import { TwitterImport } from "@/components/TwitterImport";
-import { RefreshCw, UserPlus, UserMinus } from "lucide-react";
+import { RefreshCw, UserPlus, UserMinus, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -24,6 +24,15 @@ const Index = () => {
   });
   const [newFollowerName, setNewFollowerName] = useState('');
   const [newFollowerUsername, setNewFollowerUsername] = useState('');
+
+  const clearData = () => {
+    localStorage.removeItem('followers');
+    setFollowers([]);
+    toast({
+      title: "Success",
+      description: "All follower data has been cleared",
+    });
+  };
 
   const addFollower = () => {
     if (!newFollowerName || !newFollowerUsername) {
@@ -99,6 +108,10 @@ const Index = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">Follower Tracker</h1>
         <div className="flex gap-2">
+          <Button onClick={clearData} variant="destructive" size="sm">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Clear Data
+          </Button>
           <Dialog>
             <DialogTrigger asChild>
               <Button className="bg-green-500 hover:bg-green-600">
