@@ -55,25 +55,29 @@ const Index = () => {
     setNewFollowerUsername('');
   };
 
-  const removeFollower = (id: string) => {
-    const updatedFollowers = followers.filter(f => f.id !== id);
-    setFollowers(updatedFollowers);
-    localStorage.setItem('followers', JSON.stringify(updatedFollowers));
-    
-    toast({
-      title: "Success",
-      description: "Follower removed successfully",
-    });
-  };
-
   const handleImport = (importedFollowers: any[]) => {
+    // Transform the imported data to match our follower structure
+    const transformedFollowers = importedFollowers.map(f => ({
+      id: f.id || Date.now().toString(),
+      name: f.follower?.name || f.name || 'Unknown',
+      username: f.follower?.screen_name || f.username || 'unknown',
+      timestamp: f.follower?.created_at 
+        ? new Date(f.follower.created_at).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0]
+    }));
+    
     // Merge imported followers with existing ones, avoiding duplicates
     const existingIds = new Set(followers.map((f: any) => f.id));
-    const newFollowers = importedFollowers.filter(f => !existingIds.has(f.id));
+    const newFollowers = transformedFollowers.filter(f => !existingIds.has(f.id));
     
     const updatedFollowers = [...followers, ...newFollowers];
     setFollowers(updatedFollowers);
     localStorage.setItem('followers', JSON.stringify(updatedFollowers));
+
+    toast({
+      title: "Success",
+      description: `Imported ${newFollowers.length} new followers`,
+    });
   };
 
   // Calculate stats
