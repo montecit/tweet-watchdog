@@ -32,7 +32,7 @@ export const FollowersList = ({ title, followers, type }: FollowersListProps) =>
                 <div className="rounded-full bg-gray-100 p-2">
                   <User className="h-4 w-4 text-gray-500" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 text-left">
                   <p className="font-medium">{follower.name}</p>
                   <p className="text-sm text-gray-500">@{follower.username}</p>
                 </div>
