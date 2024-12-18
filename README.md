@@ -83,11 +83,20 @@ yarn dev
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. By contributing to this project, you agree to abide by its terms.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Attribution Requirements
+
+When using this software, please include the following attribution in your project:
+
+```
+This project uses Twitter Follower Analytics by Make It Digi (www.makeitdigi.com)
+Licensed under MIT License
+```
 
 ## Topics
 
