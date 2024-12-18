@@ -24,8 +24,17 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
     setIsLoading(true);
     try {
       const text = await file.text();
-      // Remove the "window.YTD.followers.part0 = " prefix from the file
-      const jsonText = text.replace(/window\.YTD\.followers\.part0\s*=\s*/, '');
+      
+      // Check if the file starts with the expected prefix
+      if (!text.trim().startsWith('window.YTD.followers.part0')) {
+        throw new Error('Invalid file format: File must start with "window.YTD.followers.part0"');
+      }
+
+      // Extract the JSON part after the assignment
+      const jsonStartIndex = text.indexOf('=') + 1;
+      const jsonText = text.slice(jsonStartIndex).trim();
+      
+      // Parse the JSON data
       const data = JSON.parse(jsonText);
       
       // Handle both array format and direct object format
@@ -48,7 +57,9 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       console.error('Error parsing Twitter data:', error);
       toast({
         title: "Error",
-        description: "Failed to parse Twitter data. Make sure you're uploading the followers.js file from your Twitter data export. The file should start with 'window.YTD.followers.part0'",
+        description: error instanceof Error 
+          ? error.message 
+          : "Failed to parse Twitter data. Make sure you're uploading the correct followers.js file from your Twitter data export.",
         variant: "destructive"
       });
     } finally {
