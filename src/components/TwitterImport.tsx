@@ -25,14 +25,17 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
     try {
       const text = await file.text();
       
-      // Check if the file starts with the expected prefix
-      if (!text.trim().startsWith('window.YTD.followers.part0')) {
+      // First, clean the text by removing any BOM or whitespace
+      const cleanText = text.trim().replace(/^\uFEFF/, '');
+      
+      // Check if the file starts with the expected prefix (case insensitive)
+      if (!cleanText.toLowerCase().startsWith('window.ytd.followers.part0')) {
         throw new Error('Invalid file format: File must start with "window.YTD.followers.part0"');
       }
 
       // Extract the JSON part after the assignment
-      const jsonStartIndex = text.indexOf('=') + 1;
-      const jsonText = text.slice(jsonStartIndex).trim();
+      const jsonStartIndex = cleanText.indexOf('=') + 1;
+      const jsonText = cleanText.slice(jsonStartIndex).trim();
       
       // Parse the JSON data
       const data = JSON.parse(jsonText);
