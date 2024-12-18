@@ -49,10 +49,11 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       
       const followers = followersArray.map((f: any) => {
         console.log('Raw follower data:', f);
+        const userId = f.follower.accountId;
         return {
-          id: f.follower.accountId,
-          username: f.follower.userLink.split('/').pop() || '', // Extract username from userLink
-          name: f.follower.displayName || f.follower.userLink.split('/').pop() || '', // Use displayName or fallback to username
+          id: userId,
+          username: `user_${userId}`, // Create a username from the ID
+          name: `Twitter User ${userId}`, // Create a display name from the ID
           timestamp: new Date().toISOString().split('T')[0]
         };
       });
@@ -63,7 +64,7 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
       
       toast({
         title: "Success",
-        description: `Imported ${followers.length} followers from Twitter data`,
+        description: `Imported ${followers.length} followers. Note: Usernames are shown as user IDs since the export file only contains IDs.`,
       });
     } catch (error) {
       console.error('Error parsing Twitter data:', error);
@@ -89,7 +90,8 @@ export const TwitterImport = ({ onImport }: { onImport: (followers: any[]) => vo
         1. Go to Twitter Settings → Your Account → Download an archive of your data<br />
         2. Wait for the email with your data<br />
         3. Extract the ZIP file and find the follower.js file in the data folder<br />
-        4. Upload that file here
+        4. Upload that file here<br />
+        Note: Due to Twitter's data export format, followers will be shown with their numeric IDs
       </p>
       <div className="flex gap-2">
         <Input
